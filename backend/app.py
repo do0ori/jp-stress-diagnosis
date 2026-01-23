@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect
 from flask_cors import CORS
 from flasgger import Swagger
 from services.diagnosis_service import DiagnosisService
@@ -11,8 +11,8 @@ swagger = Swagger(app)
 diagnosis_service = DiagnosisService()
 
 @app.route('/')
-def hello():
-    return jsonify({"message": "Hello from Flask Backend!"})
+def index():
+    return redirect('/apidocs')
 
 @app.route('/api/diagnosis', methods=['POST'])
 def diagnose():
