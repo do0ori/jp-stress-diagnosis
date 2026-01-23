@@ -1,0 +1,276 @@
+{
+    "A": {
+        "F-A1": {
+            "label": "양적 부담",
+            "base": 15,
+            "weights": {
+                "A1": -1,
+                "A2": -1,
+                "A3": -1
+            },
+            "scales": {
+                "male": "S1",
+                "female": "S2"
+            },
+            "group": 1
+        },
+        "F-A2": {
+            "label": "질적 부담",
+            "base": 15,
+            "weights": {
+                "A4": -1,
+                "A5": -1,
+                "A6": -1
+            },
+            "scales": {
+                "male": "S1",
+                "female": "S3"
+            },
+            "group": 1
+        },
+        "F-A3": {
+            "label": "신체적 부담",
+            "base": 5,
+            "weights": {
+                "A7": -1
+            },
+            "scales": {
+                "male": "S4",
+                "female": "S4"
+            },
+            "group": 1
+        },
+        "F-A4": {
+            "label": "대인 관계",
+            "base": 10,
+            "weights": {
+                "A12": -1,
+                "A13": -1,
+                "A14": 1
+            },
+            "scales": {
+                "male": "S5",
+                "female": "S5"
+            },
+            "group": 1
+        },
+        "F-A5": {
+            "label": "직무 환경",
+            "base": 5,
+            "weights": {
+                "A15": -1
+            },
+            "scales": {
+                "male": "S4",
+                "female": "S6"
+            },
+            "group": 1
+        },
+        "F-A6": {
+            "label": "직무 통제",
+            "base": 15,
+            "weights": {
+                "A8": -1,
+                "A9": -1,
+                "A10": -1
+            },
+            "scales": {
+                "male": "S3",
+                "female": "S8"
+            },
+            "group": 2
+        },
+        "F-A7": {
+            "label": "기술 활용",
+            "base": 0,
+            "weights": {
+                "A11": 1
+            },
+            "scales": {
+                "male": "S7",
+                "female": "S7"
+            },
+            "group": 2
+        },
+        "F-A8": {
+            "label": "직무 적성",
+            "base": 5,
+            "weights": {
+                "A16": -1
+            },
+            "scales": {
+                "male": "S9",
+                "female": "S9"
+            },
+            "group": 2
+        },
+        "F-A9": {
+            "label": "직무 보람",
+            "base": 5,
+            "weights": {
+                "A17": -1
+            },
+            "scales": {
+                "male": "S9",
+                "female": "S9"
+            },
+            "group": 2
+        }
+    },
+    "B": {
+        "F-B1": {
+            "label": "활기",
+            "base": 0,
+            "weights": {
+                "B1": 1,
+                "B2": 1,
+                "B3": 1
+            },
+            "scales": {
+                "male": "S5",
+                "female": "S5"
+            },
+            "group": 2
+        },
+        "F-B2": {
+            "label": "짜증감",
+            "base": 0,
+            "weights": {
+                "B4": 1,
+                "B5": 1,
+                "B6": 1
+            },
+            "scales": {
+                "male": "S5",
+                "female": "S8"
+            },
+            "group": 1
+        },
+        "F-B3": {
+            "label": "피로감",
+            "base": 0,
+            "weights": {
+                "B7": 1,
+                "B8": 1,
+                "B9": 1
+            },
+            "scales": {
+                "male": "S10",
+                "female": "S11"
+            },
+            "group": 1
+        },
+        "F-B4": {
+            "label": "불안감",
+            "base": 0,
+            "weights": {
+                "B10": 1,
+                "B11": 1,
+                "B12": 1
+            },
+            "scales": {
+                "male": "S12",
+                "female": "S10"
+            },
+            "group": 1
+        },
+        "F-B5": {
+            "label": "우울감",
+            "base": 0,
+            "weights": {
+                "B13": 1,
+                "B14": 1,
+                "B15": 1,
+                "B16": 1,
+                "B17": 1,
+                "B18": 1
+            },
+            "scales": {
+                "male": "S13",
+                "female": "S14"
+            },
+            "group": 1
+        },
+        "F-B6": {
+            "label": "신체적 호소",
+            "base": 0,
+            "weights": {
+                "B19": 1,
+                "B20": 1,
+                "B21": 1,
+                "B22": 1,
+                "B23": 1,
+                "B24": 1,
+                "B25": 1,
+                "B26": 1,
+                "B27": 1,
+                "B28": 1,
+                "B29": 1
+            },
+            "scales": {
+                "male": "S15",
+                "female": "S16"
+            },
+            "group": 1
+        }
+    },
+    "C": {
+        "F-C1": {
+            "label": "상사의 지원",
+            "base": 15,
+            "weights": {
+                "C1": -1,
+                "C4": -1,
+                "C7": -1
+            },
+            "scales": {
+                "male": "S3",
+                "female": "S17"
+            },
+            "group": 2
+        },
+        "F-C2": {
+            "label": "동료의 지원",
+            "base": 15,
+            "weights": {
+                "C2": -1,
+                "C5": -1,
+                "C8": -1
+            },
+            "scales": {
+                "male": "S1",
+                "female": "S1"
+            },
+            "group": 2
+        },
+        "F-C3": {
+            "label": "가족/친구 지원",
+            "base": 15,
+            "weights": {
+                "C3": -1,
+                "C6": -1,
+                "C9": -1
+            },
+            "scales": {
+                "male": "S18",
+                "female": "S18"
+            },
+            "group": 2
+        }
+    },
+    "D": {
+        "F-D1": {
+            "label": "만족도",
+            "base": 10,
+            "weights": {
+                "D1": -1,
+                "D2": -1
+            },
+            "scales": {
+                "male": "S19",
+                "female": "S19"
+            },
+            "group": 2
+        }
+    }
+}

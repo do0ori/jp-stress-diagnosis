@@ -1,0 +1,1370 @@
+[
+  {
+    "id": "A1",
+    "section": "A",
+    "number": 1,
+    "text": "매우 많은 일을 해야 한다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 4
+      },
+      {
+        "label": "그런 편이다",
+        "score": 3
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 2
+      },
+      {
+        "label": "아니다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "A2",
+    "section": "A",
+    "number": 2,
+    "text": "정해진 시간 안에 일을 처리할 수 없다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 4
+      },
+      {
+        "label": "그런 편이다",
+        "score": 3
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 2
+      },
+      {
+        "label": "아니다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "A3",
+    "section": "A",
+    "number": 3,
+    "text": "열심히 일해야 한다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 4
+      },
+      {
+        "label": "그런 편이다",
+        "score": 3
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 2
+      },
+      {
+        "label": "아니다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "A4",
+    "section": "A",
+    "number": 4,
+    "text": "상당한 집중력이 필요하다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 4
+      },
+      {
+        "label": "그런 편이다",
+        "score": 3
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 2
+      },
+      {
+        "label": "아니다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "A5",
+    "section": "A",
+    "number": 5,
+    "text": "높은 지식이나 기술이 필요한 어려운 일이다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 4
+      },
+      {
+        "label": "그런 편이다",
+        "score": 3
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 2
+      },
+      {
+        "label": "아니다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "A6",
+    "section": "A",
+    "number": 6,
+    "text": "근무 시간 동안 언제나 일 생각을 하고 있어야 한다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 4
+      },
+      {
+        "label": "그런 편이다",
+        "score": 3
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 2
+      },
+      {
+        "label": "아니다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "A7",
+    "section": "A",
+    "number": 7,
+    "text": "신체를 많이 사용하는 일이다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 4
+      },
+      {
+        "label": "그런 편이다",
+        "score": 3
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 2
+      },
+      {
+        "label": "아니다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "A8",
+    "section": "A",
+    "number": 8,
+    "text": "자신의 페이스로 일할 수 있다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 1
+      },
+      {
+        "label": "그런 편이다",
+        "score": 2
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 3
+      },
+      {
+        "label": "아니다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "A9",
+    "section": "A",
+    "number": 9,
+    "text": "스스로 일의 순서나 방법을 결정할 수 있다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 1
+      },
+      {
+        "label": "그런 편이다",
+        "score": 2
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 3
+      },
+      {
+        "label": "아니다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "A10",
+    "section": "A",
+    "number": 10,
+    "text": "직장 내 업무 방침에 자신의 의견을 반영할 수 있다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 1
+      },
+      {
+        "label": "그런 편이다",
+        "score": 2
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 3
+      },
+      {
+        "label": "아니다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "A11",
+    "section": "A",
+    "number": 11,
+    "text": "자신의 기술이나 지식을 일에서 사용할 일이 적다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 4
+      },
+      {
+        "label": "그런 편이다",
+        "score": 3
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 2
+      },
+      {
+        "label": "아니다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "A12",
+    "section": "A",
+    "number": 12,
+    "text": "소속 부서 내에서 의견 충돌이 있다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 4
+      },
+      {
+        "label": "그런 편이다",
+        "score": 3
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 2
+      },
+      {
+        "label": "아니다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "A13",
+    "section": "A",
+    "number": 13,
+    "text": "내 부서와 다른 부서의 궁합이 좋지 않다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 4
+      },
+      {
+        "label": "그런 편이다",
+        "score": 3
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 2
+      },
+      {
+        "label": "아니다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "A14",
+    "section": "A",
+    "number": 14,
+    "text": "직장 분위기가 우호적이다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 1
+      },
+      {
+        "label": "그런 편이다",
+        "score": 2
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 3
+      },
+      {
+        "label": "아니다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "A15",
+    "section": "A",
+    "number": 15,
+    "text": "작업환경(소음, 조명, 온도, 환기 등)이 좋지 않다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 4
+      },
+      {
+        "label": "그런 편이다",
+        "score": 3
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 2
+      },
+      {
+        "label": "아니다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "A16",
+    "section": "A",
+    "number": 16,
+    "text": "업무 내용이 자신에게 맞는다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 1
+      },
+      {
+        "label": "그런 편이다",
+        "score": 2
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 3
+      },
+      {
+        "label": "아니다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "A17",
+    "section": "A",
+    "number": 17,
+    "text": "보람 있는 일이다",
+    "options": [
+      {
+        "label": "그렇다",
+        "score": 1
+      },
+      {
+        "label": "그런 편이다",
+        "score": 2
+      },
+      {
+        "label": "아닌 것 같다",
+        "score": 3
+      },
+      {
+        "label": "아니다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B1",
+    "section": "B",
+    "number": 1,
+    "text": "활기가 넘친다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 4
+      },
+      {
+        "label": "없지는 않다",
+        "score": 3
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 2
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "B2",
+    "section": "B",
+    "number": 2,
+    "text": "기운이 가득하다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 4
+      },
+      {
+        "label": "없지는 않다",
+        "score": 3
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 2
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "B3",
+    "section": "B",
+    "number": 3,
+    "text": "생기가 돈다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 4
+      },
+      {
+        "label": "없지는 않다",
+        "score": 3
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 2
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 1
+      }
+    ]
+  },
+  {
+    "id": "B4",
+    "section": "B",
+    "number": 4,
+    "text": "화를 느낀다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B5",
+    "section": "B",
+    "number": 5,
+    "text": "속으로 화가 난다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B6",
+    "section": "B",
+    "number": 6,
+    "text": "짜증이 난다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B7",
+    "section": "B",
+    "number": 7,
+    "text": "몹시 피곤하다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B8",
+    "section": "B",
+    "number": 8,
+    "text": "기진맥진하다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B9",
+    "section": "B",
+    "number": 9,
+    "text": "몸이 나른하다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B10",
+    "section": "B",
+    "number": 10,
+    "text": "긴장되어 있다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B11",
+    "section": "B",
+    "number": 11,
+    "text": "불안하다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B12",
+    "section": "B",
+    "number": 12,
+    "text": "안절부절못한다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B13",
+    "section": "B",
+    "number": 13,
+    "text": "우울하다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B14",
+    "section": "B",
+    "number": 14,
+    "text": "무엇을 하기도 귀찮다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B15",
+    "section": "B",
+    "number": 15,
+    "text": "집중이 안 된다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B16",
+    "section": "B",
+    "number": 16,
+    "text": "기분이 맑지 않다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B17",
+    "section": "B",
+    "number": 17,
+    "text": "일이 손에 잡히지 않는다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B18",
+    "section": "B",
+    "number": 18,
+    "text": "슬프다고 느낀다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B19",
+    "section": "B",
+    "number": 19,
+    "text": "어지럽다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B20",
+    "section": "B",
+    "number": 20,
+    "text": "몸 여기저기가 아프다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B21",
+    "section": "B",
+    "number": 21,
+    "text": "머리가 무겁거나 두통이 있다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B22",
+    "section": "B",
+    "number": 22,
+    "text": "목이나 어깨가 뻐근하다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B23",
+    "section": "B",
+    "number": 23,
+    "text": "허리가 아프다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B24",
+    "section": "B",
+    "number": 24,
+    "text": "눈이 피로하다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B25",
+    "section": "B",
+    "number": 25,
+    "text": "심장이 두근거리거나 숨이 차다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B26",
+    "section": "B",
+    "number": 26,
+    "text": "위장 상태가 좋지 않다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B27",
+    "section": "B",
+    "number": 27,
+    "text": "식욕이 없다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B28",
+    "section": "B",
+    "number": 28,
+    "text": "변비 또는 설사를 한다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "B29",
+    "section": "B",
+    "number": 29,
+    "text": "잘 잠들지 못한다",
+    "options": [
+      {
+        "label": "전혀 없었다",
+        "score": 1
+      },
+      {
+        "label": "없지는 않다",
+        "score": 2
+      },
+      {
+        "label": "가끔 그렇다",
+        "score": 3
+      },
+      {
+        "label": "항상 그렇다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "C1",
+    "section": "C",
+    "number": 1,
+    "text": "상사와 편하게 이야기할 수 있다",
+    "options": [
+      {
+        "label": "매우",
+        "score": 1
+      },
+      {
+        "label": "꽤나",
+        "score": 2
+      },
+      {
+        "label": "다소",
+        "score": 3
+      },
+      {
+        "label": "전혀 없다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "C2",
+    "section": "C",
+    "number": 2,
+    "text": "직장 동료와 편하게 이야기할 수 있다",
+    "options": [
+      {
+        "label": "매우",
+        "score": 1
+      },
+      {
+        "label": "꽤나",
+        "score": 2
+      },
+      {
+        "label": "다소",
+        "score": 3
+      },
+      {
+        "label": "전혀 없다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "C3",
+    "section": "C",
+    "number": 3,
+    "text": "배우자·가족·친구 등과 편하게 이야기할 수 있다",
+    "options": [
+      {
+        "label": "매우",
+        "score": 1
+      },
+      {
+        "label": "꽤나",
+        "score": 2
+      },
+      {
+        "label": "다소",
+        "score": 3
+      },
+      {
+        "label": "전혀 없다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "C4",
+    "section": "C",
+    "number": 4,
+    "text": "상사는 내가 곤란할 때 어느 정도 도움이 된다",
+    "options": [
+      {
+        "label": "매우",
+        "score": 1
+      },
+      {
+        "label": "꽤나",
+        "score": 2
+      },
+      {
+        "label": "다소",
+        "score": 3
+      },
+      {
+        "label": "전혀 없다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "C5",
+    "section": "C",
+    "number": 5,
+    "text": "직장 동료는 내가 곤란할 때 어느 정도 도움이 된다",
+    "options": [
+      {
+        "label": "매우",
+        "score": 1
+      },
+      {
+        "label": "꽤나",
+        "score": 2
+      },
+      {
+        "label": "다소",
+        "score": 3
+      },
+      {
+        "label": "전혀 없다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "C6",
+    "section": "C",
+    "number": 6,
+    "text": "배우자·가족·친구 등은 내가 곤란할 때 어느 정도 도움이 된다",
+    "options": [
+      {
+        "label": "매우",
+        "score": 1
+      },
+      {
+        "label": "꽤나",
+        "score": 2
+      },
+      {
+        "label": "다소",
+        "score": 3
+      },
+      {
+        "label": "전혀 없다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "C7",
+    "section": "C",
+    "number": 7,
+    "text": "상사는 개인적인 고민을 상담하면 어느 정도 들어준다",
+    "options": [
+      {
+        "label": "매우",
+        "score": 1
+      },
+      {
+        "label": "꽤나",
+        "score": 2
+      },
+      {
+        "label": "다소",
+        "score": 3
+      },
+      {
+        "label": "전혀 없다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "C8",
+    "section": "C",
+    "number": 8,
+    "text": "직장 동료는 개인적인 고민을 상담하면 어느 정도 들어준다",
+    "options": [
+      {
+        "label": "매우",
+        "score": 1
+      },
+      {
+        "label": "꽤나",
+        "score": 2
+      },
+      {
+        "label": "다소",
+        "score": 3
+      },
+      {
+        "label": "전혀 없다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "C9",
+    "section": "C",
+    "number": 9,
+    "text": "배우자·가족·친구 등은 개인적인 고민을 상담하면 어느 정도 들어준다",
+    "options": [
+      {
+        "label": "매우",
+        "score": 1
+      },
+      {
+        "label": "꽤나",
+        "score": 2
+      },
+      {
+        "label": "다소",
+        "score": 3
+      },
+      {
+        "label": "전혀 없다",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "D1",
+    "section": "D",
+    "number": 1,
+    "text": "일에 만족한다",
+    "options": [
+      {
+        "label": "만족",
+        "score": 1
+      },
+      {
+        "label": "그런대로 만족",
+        "score": 2
+      },
+      {
+        "label": "어느 정도 불만족",
+        "score": 3
+      },
+      {
+        "label": "불만족",
+        "score": 4
+      }
+    ]
+  },
+  {
+    "id": "D2",
+    "section": "D",
+    "number": 2,
+    "text": "가정생활에 만족한다",
+    "options": [
+      {
+        "label": "만족",
+        "score": 1
+      },
+      {
+        "label": "그런대로 만족",
+        "score": 2
+      },
+      {
+        "label": "어느 정도 불만족",
+        "score": 3
+      },
+      {
+        "label": "불만족",
+        "score": 4
+      }
+    ]
+  }
+]
