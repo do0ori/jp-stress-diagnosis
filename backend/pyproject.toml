@@ -1,0 +1,18 @@
+[project]
+name = "jp-stress-diagnosis-backend"
+version = "0.1.0"
+description = "Flask backend for JP Stress Diagnosis"
+authors = [
+    {name = "User",email = "user@example.com"}
+]
+readme = "README.md"
+requires-python = "^3.9"
+dependencies = [
+    "flask (>=3.1.2,<4.0.0)",
+    "flask-cors (>=6.0.2,<7.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
