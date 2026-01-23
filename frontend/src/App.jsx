@@ -5,7 +5,7 @@ function App() {
 
   useEffect(() => {
     // Example fetch to backend (will need proxy setup or full URL)
-    fetch('http://localhost:5000/')
+    fetch('http://localhost:5000/health-check')
       .then(res => res.json())
       .then(data => setMessage(data.message))
       .catch(err => console.error(err))
