@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getQuestions } from '../api';
+import toast from 'react-hot-toast';
 
 const SECTIONS = ['A', 'B', 'C', 'D'];
 const SECTION_TITLES = {
@@ -54,9 +55,14 @@ const Questionnaire = ({ onComplete }) => {
     const sectionQuestions = questions.filter(q => q.section === currentSection);
 
     const handleNext = () => {
-        const isSectionComplete = sectionQuestions.every(q => answers[q.id]);
-        if (!isSectionComplete) {
-            alert('참여해주셔서 감사합니다.\n정확한 진단을 위해 해당 섹션의 모든 문항에 답변해주세요.');
+        const unansweredQuestion = sectionQuestions.find(q => !answers[q.id]);
+        if (unansweredQuestion) {
+            toast.error('모든 문항에 답변해주세요.');
+            // Scroll to the first unanswered question
+            const element = document.getElementById(`question-${unansweredQuestion.id}`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
             return;
         }
 
@@ -74,9 +80,13 @@ const Questionnaire = ({ onComplete }) => {
     };
 
     const handleSubmit = () => {
-        const isSectionComplete = sectionQuestions.every(q => answers[q.id]);
-        if (!isSectionComplete) {
-            alert('참여해주셔서 감사합니다.\n정확한 진단을 위해 해당 섹션의 모든 문항에 답변해주세요.');
+        const unansweredQuestion = sectionQuestions.find(q => !answers[q.id]);
+        if (unansweredQuestion) {
+            toast.error('모든 문항에 답변해주세요.');
+            const element = document.getElementById(`question-${unansweredQuestion.id}`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
             return;
         }
 
@@ -127,7 +137,7 @@ const Questionnaire = ({ onComplete }) => {
             </div>
 
             {sectionQuestions.map((q) => (
-                <div key={q.id} style={{ marginBottom: '2rem', padding: '1rem', borderBottom: '1px solid #f0f0f0' }}>
+                <div id={`question-${q.id}`} key={q.id} style={{ marginBottom: '2rem', padding: '1rem', borderBottom: '1px solid #f0f0f0' }}>
                     <p style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '1rem' }}>{q.number}. {q.text}</p>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                         {q.options.map((opt, idx) => (
