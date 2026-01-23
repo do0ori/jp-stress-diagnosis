@@ -118,5 +118,44 @@ def diagnose():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/questions', methods=['GET'])
+def get_questions():
+    """
+    Get All Survey Questions
+    ---
+    tags:
+      - Diagnosis
+    responses:
+      200:
+        description: List of all 57 questions
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: "A1"
+              section:
+                type: string
+                example: "A"
+              number:
+                type: integer
+                example: 1
+              text:
+                type: string
+                example: "매우 많은 일을 해야 한다"
+              options:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    label:
+                      type: string
+                    score:
+                      type: integer
+    """
+    return jsonify(diagnosis_service.questions)
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
