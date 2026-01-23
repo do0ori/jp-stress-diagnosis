@@ -1,0 +1,18 @@
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: frontend/**/*
+
+backend:
+  - changed-files:
+      - any-glob-to-any-file: backend/**/*
+
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - README.md
+          - .gitignore
+          - CONTRIBUTING.md
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: .github/**/*
