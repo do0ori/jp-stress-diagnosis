@@ -3,6 +3,7 @@ import Landing from './components/Landing'
 import Questionnaire from './components/Questionnaire'
 import Result from './components/Result'
 import { postDiagnosis } from './api'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
   const [step, setStep] = useState('landing'); // landing, questionnaire, result
@@ -51,6 +52,7 @@ function App() {
         minHeight: '500px',
         padding: '20px'
       }}>
+        <Toaster position="top-center" />
         {step === 'landing' && <Landing onStart={handleStart} />}
         {step === 'questionnaire' && <Questionnaire onComplete={handleQuestionnaireComplete} />}
         {step === 'result' && diagnosisResult && <Result result={diagnosisResult} onRestart={handleRestart} />}
