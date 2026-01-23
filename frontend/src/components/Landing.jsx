@@ -9,13 +9,13 @@ const Landing = ({ onStart }) => {
 
     return (
         <div style={{ textAlign: 'center', padding: '2rem' }}>
-            <h1>Work Stress Self-Diagnosis</h1>
-            <p>Analyze your stress level at work.</p>
+            <h1>직무 스트레스 자가 진단</h1>
+            <p>현재 직장에서의 스트레스 수준을 분석해보세요.</p>
 
             <div style={{ margin: '2rem 0' }}>
-                <h3>Select Gender</h3>
+                <h3>성별 선택</h3>
                 <p style={{ fontSize: '0.9rem', color: '#666' }}>
-                    Gender affects the scoring scale.
+                    성별에 따라 진단 기준이 달라집니다.
                 </p>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '1rem' }}>
                     <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', padding: '1rem', border: gender === 'male' ? '2px solid #007bff' : '1px solid #ccc', borderRadius: '8px', backgroundColor: gender === 'male' ? '#e6f2ff' : 'transparent' }}>
@@ -55,7 +55,7 @@ const Landing = ({ onStart }) => {
                                 )}
                             </div>
                         </div>
-                        <span style={{ fontSize: '1.1rem', fontWeight: gender === 'male' ? 'bold' : 'normal' }}>Male</span>
+                        <span style={{ fontSize: '1.1rem', fontWeight: gender === 'male' ? 'bold' : 'normal' }}>남성</span>
                     </label>
 
                     <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', padding: '1rem', border: gender === 'female' ? '2px solid #e83e8c' : '1px solid #ccc', borderRadius: '8px', backgroundColor: gender === 'female' ? '#ffeef7' : 'transparent' }}>
@@ -95,7 +95,7 @@ const Landing = ({ onStart }) => {
                                 )}
                             </div>
                         </div>
-                        <span style={{ fontSize: '1.1rem', fontWeight: gender === 'female' ? 'bold' : 'normal' }}>Female</span>
+                        <span style={{ fontSize: '1.1rem', fontWeight: gender === 'female' ? 'bold' : 'normal' }}>여성</span>
                     </label>
                 </div>
             </div>
@@ -112,7 +112,7 @@ const Landing = ({ onStart }) => {
                     cursor: 'pointer'
                 }}
             >
-                Start Diagnosis
+                진단 시작하기
             </button>
         </div>
     );

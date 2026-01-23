@@ -9,17 +9,17 @@ const Result = ({ result, gender, onRestart }) => {
 
     return (
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem' }}>
-            <h1 style={{ textAlign: 'center' }}>Diagnosis Results</h1>
+            <h1 style={{ textAlign: 'center' }}>진단 결과</h1>
 
             {high_stress ? (
                 <div style={{ padding: '1rem', backgroundColor: '#f8d7da', color: '#721c24', borderRadius: '8px', marginBottom: '2rem', textAlign: 'center' }}>
-                    <h2>⚠ High Stress Warning ⚠</h2>
-                    <p>Your results indicate high stress levels. It is recommended to consult with a specialist.</p>
+                    <h2>⚠ 고스트레스 주의 ⚠</h2>
+                    <p>직무 스트레스 수준이 높게 나타났습니다. 전문가와의 상담을 권장합니다.</p>
                 </div>
             ) : (
                 <div style={{ padding: '1rem', backgroundColor: '#d4edda', color: '#155724', borderRadius: '8px', marginBottom: '2rem', textAlign: 'center' }}>
-                    <h2>Normal Stress Level</h2>
-                    <p>Your stress levels appear to be within a manageable range.</p>
+                    <h2>정상 스트레스 수준</h2>
+                    <p>직무 스트레스 수준이 안정적인 범위 내에 있습니다.</p>
                 </div>
             )}
 
@@ -49,10 +49,10 @@ const Result = ({ result, gender, onRestart }) => {
             </div>
 
             <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-                <h3>Summary Scores</h3>
-                <p>A (Causes): {summary_scores.sum_a}</p>
-                <p>B (Responses): {summary_scores.sum_b}</p>
-                <p>C (Support): {summary_scores.sum_c}</p>
+                <h3>영역별 점수</h3>
+                <p>A (스트레스 요인): {summary_scores.sum_a}</p>
+                <p>B (스트레스 반응): {summary_scores.sum_b}</p>
+                <p>C (사회적 지원): {summary_scores.sum_c}</p>
             </div>
 
             <div style={{ marginTop: '3rem', textAlign: 'center' }}>
@@ -68,7 +68,7 @@ const Result = ({ result, gender, onRestart }) => {
                         cursor: 'pointer'
                     }}
                 >
-                    Restart Diagnosis
+                    다시 진단하기
                 </button>
             </div>
         </div>

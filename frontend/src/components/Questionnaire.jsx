@@ -4,10 +4,10 @@ import toast from 'react-hot-toast';
 
 const SECTIONS = ['A', 'B', 'C', 'D'];
 const SECTION_TITLES = {
-    'A': 'Part A. Stress Causes',
-    'B': 'Part B. Stress Responses',
-    'C': 'Part C. Social Support',
-    'D': 'Part D. Satisfaction'
+    'A': 'Part A. 스트레스 원인',
+    'B': 'Part B. 스트레스 반응',
+    'C': 'Part C. 사회적 지원',
+    'D': 'Part D. 직무 만족도'
 };
 
 const Questionnaire = ({ gender, onComplete }) => {
@@ -104,8 +104,8 @@ const Questionnaire = ({ gender, onComplete }) => {
 
     const progress = Math.round((Object.keys(answers).length / questions.length) * 100);
 
-    if (loading) return <div>Loading questions...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (loading) return <div>질문을 불러오는 중입니다...</div>;
+    if (error) return <div>오류: {error}</div>;
 
     return (
         <div style={{ maxWidth: '100%', padding: '1rem' }}>
@@ -123,11 +123,11 @@ const Questionnaire = ({ gender, onComplete }) => {
                         onClick={handleFillDebugData}
                         style={{ padding: '0.3rem 0.8rem', fontSize: '0.75rem', background: '#f8f9fa', color: '#6c757d', border: '1px solid #dee2e6', borderRadius: '4px', cursor: 'pointer' }}
                     >
-                        [DEV] Fill Test Data
+                        [개발용] 테스트 데이터 채우기
                     </button>
                 </div>
                 <div style={{ marginBottom: '1rem' }}>
-                    <p>Progress: {progress}%</p>
+                    <p>진행률: {progress}%</p>
                     <div style={{ width: '100%', height: '10px', background: '#eee', borderRadius: '5px', overflow: 'hidden' }}>
                         <div style={{ width: `${progress}%`, height: '100%', background: themeColor, transition: 'width 0.3s' }}></div>
                     </div>
@@ -206,7 +206,7 @@ const Questionnaire = ({ gender, onComplete }) => {
                         onClick={handlePrev}
                         style={{ padding: '0.8rem 2rem', fontSize: '1rem', background: '#6c757d', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                     >
-                        이전 (Previous)
+                        이전
                     </button>
                 ) : (
                     <div></div>
@@ -217,14 +217,14 @@ const Questionnaire = ({ gender, onComplete }) => {
                         onClick={handleNext}
                         style={{ padding: '0.8rem 2rem', fontSize: '1rem', background: themeColor, color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                     >
-                        다음 (Next)
+                        다음
                     </button>
                 ) : (
                     <button
                         onClick={handleSubmit}
                         style={{ padding: '0.8rem 2rem', fontSize: '1rem', background: themeColor, color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                     >
-                        결과 보기 (Submit)
+                        결과 보기
                     </button>
                 )}
             </div>
