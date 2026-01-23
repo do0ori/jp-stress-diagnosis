@@ -10,10 +10,13 @@ const SECTION_TITLES = {
     'D': 'Part D. Satisfaction'
 };
 
-const Questionnaire = ({ onComplete }) => {
+const Questionnaire = ({ gender, onComplete }) => {
     const [questions, setQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
     const [loading, setLoading] = useState(true);
+
+    const themeColor = gender === 'female' ? '#e83e8c' : '#007bff';
+    const bgSelected = gender === 'female' ? '#ffeef7' : '#e6f2ff';
     const [error, setError] = useState(null);
     const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
 
@@ -126,11 +129,11 @@ const Questionnaire = ({ onComplete }) => {
                 <div style={{ marginBottom: '1rem' }}>
                     <p>Progress: {progress}%</p>
                     <div style={{ width: '100%', height: '10px', background: '#eee', borderRadius: '5px', overflow: 'hidden' }}>
-                        <div style={{ width: `${progress}%`, height: '100%', background: '#28a745', transition: 'width 0.3s' }}></div>
+                        <div style={{ width: `${progress}%`, height: '100%', background: themeColor, transition: 'width 0.3s' }}></div>
                     </div>
                 </div>
 
-                <div style={{ paddingBottom: '0.5rem', borderBottom: '2px solid #007bff' }}>
+                <div style={{ paddingBottom: '0.5rem', borderBottom: `2px solid ${themeColor}` }}>
                     <h2>{SECTION_TITLES[currentSection]}</h2>
                     <p style={{ color: '#666', margin: 0 }}>해당 섹션의 모든 문항에 답변해 주세요.</p>
                 </div>
@@ -149,19 +152,47 @@ const Questionnaire = ({ onComplete }) => {
                                     alignItems: 'center',
                                     padding: '0.8rem',
                                     borderRadius: '4px',
-                                    backgroundColor: answers[q.id] === (idx + 1) ? '#e6f2ff' : 'white',
-                                    border: answers[q.id] === (idx + 1) ? '1px solid #007bff' : '1px solid #ddd',
+                                    backgroundColor: answers[q.id] === (idx + 1) ? bgSelected : 'white',
+                                    border: answers[q.id] === (idx + 1) ? `1px solid ${themeColor}` : '1px solid #ddd',
                                     transition: 'all 0.2s'
                                 }}
                             >
-                                <input
-                                    type="radio"
-                                    name={q.id}
-                                    value={idx + 1}
-                                    checked={answers[q.id] === (idx + 1)}
-                                    onChange={(e) => handleOptionChange(q.id, e.target.value)}
-                                    style={{ marginRight: '1rem', width: '18px', height: '18px' }}
-                                />
+                                <div style={{ position: 'relative', marginRight: '1rem', width: '20px', height: '20px' }}>
+                                    <input
+                                        type="radio"
+                                        name={q.id}
+                                        value={idx + 1}
+                                        checked={answers[q.id] === (idx + 1)}
+                                        onChange={(e) => handleOptionChange(q.id, e.target.value)}
+                                        style={{
+                                            position: 'absolute',
+                                            opacity: 0,
+                                            width: '100%',
+                                            height: '100%',
+                                            cursor: 'pointer',
+                                            margin: 0
+                                        }}
+                                    />
+                                    <div style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        borderRadius: '50%',
+                                        border: `2px solid ${answers[q.id] === (idx + 1) ? themeColor : '#ccc'}`,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        backgroundColor: 'white'
+                                    }}>
+                                        {answers[q.id] === (idx + 1) && (
+                                            <div style={{
+                                                width: '10px',
+                                                height: '10px',
+                                                borderRadius: '50%',
+                                                backgroundColor: themeColor
+                                            }} />
+                                        )}
+                                    </div>
+                                </div>
                                 <span style={{ fontSize: '1rem' }}>{opt.label}</span>
                             </label>
                         ))}
@@ -184,14 +215,14 @@ const Questionnaire = ({ onComplete }) => {
                 {currentSectionIndex < SECTIONS.length - 1 ? (
                     <button
                         onClick={handleNext}
-                        style={{ padding: '0.8rem 2rem', fontSize: '1rem', background: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                        style={{ padding: '0.8rem 2rem', fontSize: '1rem', background: themeColor, color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                     >
                         다음 (Next)
                     </button>
                 ) : (
                     <button
                         onClick={handleSubmit}
-                        style={{ padding: '0.8rem 2rem', fontSize: '1rem', background: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                        style={{ padding: '0.8rem 2rem', fontSize: '1rem', background: themeColor, color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                     >
                         결과 보기 (Submit)
                     </button>

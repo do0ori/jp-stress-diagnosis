@@ -1,9 +1,11 @@
 import React from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
-const Result = ({ result, onRestart }) => {
+const Result = ({ result, gender, onRestart }) => {
     const { high_stress, summary_scores } = result.result;
     const { charts } = result;
+
+    const themeColor = gender === 'female' ? '#e83e8c' : '#007bff';
 
     return (
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem' }}>
@@ -59,7 +61,7 @@ const Result = ({ result, onRestart }) => {
                     style={{
                         padding: '1rem 2rem',
                         fontSize: '1.2rem',
-                        backgroundColor: '#007bff',
+                        backgroundColor: themeColor,
                         color: 'white',
                         border: 'none',
                         borderRadius: '4px',

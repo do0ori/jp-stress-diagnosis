@@ -54,8 +54,8 @@ function App() {
       }}>
         <Toaster position="top-center" />
         {step === 'landing' && <Landing onStart={handleStart} />}
-        {step === 'questionnaire' && <Questionnaire onComplete={handleQuestionnaireComplete} />}
-        {step === 'result' && diagnosisResult && <Result result={diagnosisResult} onRestart={handleRestart} />}
+        {step === 'questionnaire' && <Questionnaire gender={gender} onComplete={handleQuestionnaireComplete} />}
+        {step === 'result' && diagnosisResult && <Result result={diagnosisResult} gender={gender} onRestart={handleRestart} />}
       </div>
     </div>
   )
