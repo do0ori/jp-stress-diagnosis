@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from flasgger import Swagger
 from services.diagnosis_service import DiagnosisService
 
 app = Flask(__name__)
 # Enable CORS for all routes (for development convenience)
 CORS(app)
+swagger = Swagger(app)
 
 diagnosis_service = DiagnosisService()
 
@@ -14,6 +16,70 @@ def hello():
 
 @app.route('/api/diagnosis', methods=['POST'])
 def diagnose():
+    """
+    JP Job/Stress Diagnosis Endpoint
+    ---
+    tags:
+      - Diagnosis
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            gender:
+              type: string
+              enum: [male, female]
+              description: Gender of the user (affects scaling).
+            answers:
+              type: object
+              description: Dictionary of Question ID to Answer Index (1-4).
+              example:
+                A1: 1
+                A2: 3
+                B1: 4
+    responses:
+      200:
+        description: Diagnosis result with spider chart data
+        schema:
+          type: object
+          properties:
+            result:
+              type: object
+              properties:
+                high_stress:
+                  type: boolean
+                summary_scores:
+                  type: object
+                  properties:
+                    sum_a:
+                      type: integer
+                    sum_b:
+                      type: integer
+                    sum_c:
+                      type: integer
+            charts:
+              type: array
+              items:
+                type: object
+                properties:
+                  label:
+                    type: string
+                  axes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        label:
+                          type: string
+                        score:
+                          type: integer
+      400:
+        description: Invalid input
+    """
     try:
         data = request.get_json()
         if not data:
