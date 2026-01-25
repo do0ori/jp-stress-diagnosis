@@ -1,9 +1,33 @@
-import React from 'react';
+import { useState } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { sendResultEmail } from '../api';
+import toast from 'react-hot-toast';
 
-const Result = ({ result, gender, onRestart }) => {
+const Result = ({ result, gender, onRestart, answers }) => { // answers are needed now
     const { high_stress, summary_scores } = result.result;
     const { charts } = result;
+
+    const [email, setEmail] = useState('');
+    const [sending, setSending] = useState(false);
+
+    const handleSendEmail = async () => {
+        if (!email) {
+            toast.error('이메일 주소를 입력해주세요.');
+            return;
+        }
+        setSending(true);
+        try {
+            await sendResultEmail(email, answers, gender);
+            toast.success('결과지가 이메일로 발송되었습니다!');
+            setEmail('');
+        } catch (error) {
+            console.error(error);
+            toast.error('이메일 발송에 실패했습니다.');
+        } finally {
+            setSending(false);
+        }
+    };
+
 
     const themeColor = gender === 'female' ? '#e83e8c' : '#007bff';
 
@@ -53,6 +77,33 @@ const Result = ({ result, gender, onRestart }) => {
                 <p>A (스트레스 요인): {summary_scores.sum_a}</p>
                 <p>B (스트레스 반응): {summary_scores.sum_b}</p>
                 <p>C (사회적 지원): {summary_scores.sum_c}</p>
+            </div>
+
+            <div style={{ marginTop: '2rem', textAlign: 'center', padding: '1rem', borderTop: '1px solid #eee' }}>
+                <h3>결과지 이메일로 받기</h3>
+                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', alignItems: 'center' }}>
+                    <input
+                        type="email"
+                        placeholder="example@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc', width: '250px' }}
+                    />
+                    <button
+                        onClick={handleSendEmail}
+                        disabled={sending}
+                        style={{
+                            padding: '0.5rem 1rem',
+                            backgroundColor: '#6c757d',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: sending ? 'wait' : 'pointer'
+                        }}
+                    >
+                        {sending ? '보내는 중...' : '보내기'}
+                    </button>
+                </div>
             </div>
 
             <div style={{ marginTop: '3rem', textAlign: 'center' }}>

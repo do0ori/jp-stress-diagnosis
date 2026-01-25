@@ -9,15 +9,17 @@ function App() {
   const [step, setStep] = useState('landing'); // landing, questionnaire, result
   const [gender, setGender] = useState('male');
   const [diagnosisResult, setDiagnosisResult] = useState(null);
+  const [answers, setAnswers] = useState({});
 
   const handleStart = (selectedGender) => {
     setGender(selectedGender);
     setStep('questionnaire');
   };
 
-  const handleQuestionnaireComplete = async (answers) => {
+  const handleQuestionnaireComplete = async (submittedAnswers) => {
     try {
-      const result = await postDiagnosis(answers, gender);
+      setAnswers(submittedAnswers);
+      const result = await postDiagnosis(submittedAnswers, gender);
       setDiagnosisResult(result);
       setStep('result');
     } catch (error) {
@@ -29,6 +31,7 @@ function App() {
   const handleRestart = () => {
     setStep('landing');
     setDiagnosisResult(null);
+    setAnswers({});
     setGender('male');
   };
 
@@ -55,7 +58,7 @@ function App() {
         <Toaster position="top-center" />
         {step === 'landing' && <Landing onStart={handleStart} />}
         {step === 'questionnaire' && <Questionnaire gender={gender} onComplete={handleQuestionnaireComplete} />}
-        {step === 'result' && diagnosisResult && <Result result={diagnosisResult} gender={gender} onRestart={handleRestart} />}
+        {step === 'result' && diagnosisResult && <Result result={diagnosisResult} gender={gender} onRestart={handleRestart} answers={answers} />}
       </div>
     </div>
   )

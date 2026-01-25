@@ -20,3 +20,18 @@ export const postDiagnosis = async (answers, gender) => {
     }
     return response.json();
 };
+
+export const sendResultEmail = async (email, answers, gender) => {
+    const response = await fetch('/api/send-result', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, answers, gender }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to send email');
+    }
+    return response.json();
+};
