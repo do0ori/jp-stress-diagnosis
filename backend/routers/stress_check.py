@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request
 from services.diagnosis_service import DiagnosisService
+from services.email_service import EmailService
 
 stress_check_bp = Blueprint('stress_check', __name__)
 
 diagnosis_service = DiagnosisService()
+email_service = EmailService()
 
 @stress_check_bp.route('/api/diagnosis', methods=['POST'])
 def diagnose():
@@ -129,3 +131,60 @@ def get_questions():
                       type: integer
     """
     return jsonify(diagnosis_service.questions)
+
+@stress_check_bp.route('/api/send-result', methods=['POST'])
+def send_result_email():
+    """
+    Send Diagnosis Result via Email
+    ---
+    tags:
+      - Stress Check
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              description: Recipient email address
+            gender:
+              type: string
+              enum: [male, female]
+            answers:
+              type: object
+              description: Dictionary of Question ID to Answer Index
+    responses:
+      200:
+        description: Email sent successfully
+      400:
+        description: Missing required fields
+      500:
+        description: Failed to send email
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No input data provided"}), 400
+            
+        email = data.get('email')
+        gender = data.get('gender')
+        answers = data.get('answers')
+        
+        if not email or not gender or not answers:
+            return jsonify({"error": "Missing 'email', 'gender', or 'answers'"}), 400
+            
+        # 1. Re-calculate logic to ensure data integrity
+        diagnosis_result = diagnosis_service.calculate(answers, gender)
+        
+        # 2. Send Email with PDF
+        success, message = email_service.send_diagnosis_email(email, diagnosis_result)
+        
+        if success:
+            return jsonify({"message": "Email sent successfully"}), 200
+        else:
+            return jsonify({"error": message}), 500
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
