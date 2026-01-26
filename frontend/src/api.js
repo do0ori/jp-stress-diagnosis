@@ -22,3 +22,11 @@ export const postDiagnosis = async (answers, gender) => {
     }
     return response.json();
 };
+
+export const checkHealth = async () => {
+    const response = await fetch(`${API_BASE_URL}/health-check`);
+    if (!response.ok) {
+        throw new Error('Health check failed');
+    }
+    return response.json();
+};

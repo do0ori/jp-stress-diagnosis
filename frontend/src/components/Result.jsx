@@ -16,7 +16,7 @@ const Result = ({ result, gender, onRestart }) => {
         setDownloading(true);
         try {
             const canvas = await html2canvas(resultRef.current, {
-                scale: 2,
+                scale: 3,
                 useCORS: true,
                 onclone: (clonedDoc) => {
                     // 1. Hide buttons
@@ -31,7 +31,7 @@ const Result = ({ result, gender, onRestart }) => {
                     const container = clonedDoc.querySelector('.result-container');
                     if (container) {
                         container.style.maxWidth = 'none';
-                        container.style.width = '1200px';
+                        container.style.width = '1300px';
                         container.style.padding = '2rem';
                     }
 
@@ -40,7 +40,8 @@ const Result = ({ result, gender, onRestart }) => {
                     if (chartArea) {
                         chartArea.style.overflow = 'visible';
                         chartArea.style.flexWrap = 'nowrap';
-                        chartArea.style.justifyContent = 'space-between';
+                        chartArea.style.justifyContent = 'center';
+                        chartArea.style.gap = '4rem';
                     }
                 }
             });
@@ -48,14 +49,23 @@ const Result = ({ result, gender, onRestart }) => {
 
             const pdf = new jsPDF('l', 'mm', 'a4'); // Landscape
             const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            const pdfHeight = pdf.internal.pageSize.getHeight();
 
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+
+            const imgX = (pdfWidth - imgWidth * ratio) / 2;
+            const imgY = 0; // Top align primarily, or center: (pdfHeight - imgHeight * ratio) / 2;
+
+            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
 
             const today = new Date();
             const dateString = today.toISOString().split('T')[0]; // YYYY-MM-DD
+            const timeString = today.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
 
-            pdf.save(`stress-diagnosis-result-${dateString}.pdf`);
+            pdf.save(`stress-diagnosis-result-${dateString}_${timeString}.pdf`);
             toast.success('PDF 다운로드가 시작되었습니다.');
         } catch (error) {
             console.error(error);
@@ -91,13 +101,13 @@ const Result = ({ result, gender, onRestart }) => {
 
             <div className="chart-scroll-area" style={{ display: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between', gap: '1rem', overflowX: 'auto' }}>
                 {charts.map((chart, idx) => (
-                    <div key={idx} style={{ flex: '1', minWidth: '300px', border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
+                    <div key={idx} style={{ flex: '1', minWidth: '350px', border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
                         <h3 style={{ textAlign: 'center' }}>{chart.label}</h3>
                         <div style={{ width: '100%', height: '300px' }}>
                             <ResponsiveContainer width="100%" height="100%">
-                                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chart.axes}>
+                                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chart.axes}>
                                     <PolarGrid />
-                                    <PolarAngleAxis dataKey="label" fontSize={10} />
+                                    <PolarAngleAxis dataKey="label" fontSize={11} />
                                     <PolarRadiusAxis angle={30} domain={[0, 5]} />
                                     <Radar
                                         name={chart.label}
