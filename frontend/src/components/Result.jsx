@@ -55,8 +55,9 @@ const Result = ({ result, gender, onRestart }) => {
 
             const today = new Date();
             const dateString = today.toISOString().split('T')[0]; // YYYY-MM-DD
+            const timeString = today.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
 
-            pdf.save(`stress-diagnosis-result-${dateString}.pdf`);
+            pdf.save(`stress-diagnosis-result-${dateString}_${timeString}.pdf`);
             toast.success('PDF 다운로드가 시작되었습니다.');
         } catch (error) {
             console.error(error);
