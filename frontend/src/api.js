@@ -1,5 +1,7 @@
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 export const getQuestions = async () => {
-    const response = await fetch('/api/questions');
+    const response = await fetch(`${API_BASE_URL}/api/questions`);
     if (!response.ok) {
         throw new Error('Failed to fetch questions');
     }
@@ -7,7 +9,7 @@ export const getQuestions = async () => {
 };
 
 export const postDiagnosis = async (answers, gender) => {
-    const response = await fetch('/api/diagnosis', {
+    const response = await fetch(`${API_BASE_URL}/api/diagnosis`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
