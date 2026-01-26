@@ -1,10 +1,42 @@
 import React, { useState } from 'react';
+import { checkHealth } from '../api';
 
 const Landing = ({ onStart }) => {
     const [gender, setGender] = useState('male');
+    const [isLoading, setIsLoading] = useState(false);
+    const [statusMessage, setStatusMessage] = useState('');
 
-    const handleStart = () => {
-        onStart(gender);
+    const handleStart = async () => {
+        setIsLoading(true);
+        setStatusMessage('서버 상태를 확인 중입니다...');
+
+        try {
+            let attempts = 0;
+            const maxAttempts = 20; // Try for ~1 minute
+
+            while (attempts < maxAttempts) {
+                try {
+                    await checkHealth();
+                    onStart(gender);
+                    return;
+                } catch (e) {
+                    console.log("Health check failed, retrying...", e);
+                    attempts++;
+                    // If first attempt fails (or subsequent), show wake-up message
+                    setStatusMessage('서버가 수면 모드에서 깨어나고 있습니다. (약 30초 소요)');
+
+                    // Wait 3 seconds before next retry
+                    await new Promise(r => setTimeout(r, 3000));
+                }
+            }
+
+            setStatusMessage('서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.');
+            setIsLoading(false);
+        } catch (error) {
+            console.error(error);
+            setStatusMessage('알 수 없는 오류가 발생했습니다.');
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -102,18 +134,31 @@ const Landing = ({ onStart }) => {
 
             <button
                 onClick={handleStart}
+                disabled={isLoading}
                 style={{
                     padding: '1rem 2rem',
                     fontSize: '1.2rem',
-                    backgroundColor: gender === 'female' ? '#e83e8c' : '#007bff',
+                    backgroundColor: isLoading ? '#ccc' : (gender === 'female' ? '#e83e8c' : '#007bff'),
                     color: 'white',
                     border: 'none',
                     borderRadius: '4px',
-                    cursor: 'pointer'
+                    cursor: isLoading ? 'not-allowed' : 'pointer'
                 }}
             >
-                진단 시작하기
+                {isLoading ? (
+                    <span>
+                        준비 중
+                        <span className="loading-dot">.</span>
+                        <span className="loading-dot">.</span>
+                        <span className="loading-dot">.</span>
+                    </span>
+                ) : '진단 시작하기'}
             </button>
+            {isLoading && (
+                <p style={{ marginTop: '1rem', color: '#666', fontSize: '0.9rem' }}>
+                    {statusMessage}
+                </p>
+            )}
         </div>
     );
 };
