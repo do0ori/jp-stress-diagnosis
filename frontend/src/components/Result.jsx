@@ -16,7 +16,7 @@ const Result = ({ result, gender, onRestart }) => {
         setDownloading(true);
         try {
             const canvas = await html2canvas(resultRef.current, {
-                scale: 2,
+                scale: 3,
                 useCORS: true,
                 onclone: (clonedDoc) => {
                     // 1. Hide buttons
@@ -31,7 +31,7 @@ const Result = ({ result, gender, onRestart }) => {
                     const container = clonedDoc.querySelector('.result-container');
                     if (container) {
                         container.style.maxWidth = 'none';
-                        container.style.width = '1500px'; // Increased from 1200px
+                        container.style.width = '1300px';
                         container.style.padding = '2rem';
                     }
 
@@ -49,9 +49,17 @@ const Result = ({ result, gender, onRestart }) => {
 
             const pdf = new jsPDF('l', 'mm', 'a4'); // Landscape
             const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            const pdfHeight = pdf.internal.pageSize.getHeight();
 
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+
+            const imgX = (pdfWidth - imgWidth * ratio) / 2;
+            const imgY = 0; // Top align primarily, or center: (pdfHeight - imgHeight * ratio) / 2;
+
+            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
 
             const today = new Date();
             const dateString = today.toISOString().split('T')[0]; // YYYY-MM-DD
