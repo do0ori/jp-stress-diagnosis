@@ -31,7 +31,7 @@ const Result = ({ result, gender, onRestart }) => {
                     const container = clonedDoc.querySelector('.result-container');
                     if (container) {
                         container.style.maxWidth = 'none';
-                        container.style.width = '1200px';
+                        container.style.width = '1500px'; // Increased from 1200px
                         container.style.padding = '2rem';
                     }
 
@@ -40,7 +40,8 @@ const Result = ({ result, gender, onRestart }) => {
                     if (chartArea) {
                         chartArea.style.overflow = 'visible';
                         chartArea.style.flexWrap = 'nowrap';
-                        chartArea.style.justifyContent = 'space-between';
+                        chartArea.style.justifyContent = 'center';
+                        chartArea.style.gap = '4rem';
                     }
                 }
             });
@@ -91,13 +92,13 @@ const Result = ({ result, gender, onRestart }) => {
 
             <div className="chart-scroll-area" style={{ display: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between', gap: '1rem', overflowX: 'auto' }}>
                 {charts.map((chart, idx) => (
-                    <div key={idx} style={{ flex: '1', minWidth: '300px', border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
+                    <div key={idx} style={{ flex: '1', minWidth: '350px', border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
                         <h3 style={{ textAlign: 'center' }}>{chart.label}</h3>
                         <div style={{ width: '100%', height: '300px' }}>
                             <ResponsiveContainer width="100%" height="100%">
-                                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chart.axes}>
+                                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chart.axes}>
                                     <PolarGrid />
-                                    <PolarAngleAxis dataKey="label" fontSize={10} />
+                                    <PolarAngleAxis dataKey="label" fontSize={11} />
                                     <PolarRadiusAxis angle={30} domain={[0, 5]} />
                                     <Radar
                                         name={chart.label}
