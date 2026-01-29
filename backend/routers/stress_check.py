@@ -114,7 +114,7 @@ def diagnose_organization():
             gender:
               type: string
               enum: [male, female]
-              description: Gender for coefficient selection (default: male or mixed logic).
+              description: "Gender for coefficient selection (default: male or mixed logic)."
     responses:
       200:
         description: Organizational diagnosis result
