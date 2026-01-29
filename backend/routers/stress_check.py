@@ -91,6 +91,84 @@ def diagnose():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@stress_check_bp.route('/api/diagnosis/organization', methods=['POST'])
+def diagnose_organization():
+    """
+    JP Organization Stress Diagnosis Endpoint
+    ---
+    tags:
+      - Stress Check
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            answers_list:
+              type: array
+              description: List of answer dictionaries. Each dictionary maps QID to Answer Index (1-4).
+              items:
+                type: object
+                example: {"A1": 1, "A2": 3, "B1": 4}
+            gender:
+              type: string
+              enum: [male, female]
+              description: Gender for coefficient selection (default: male or mixed logic).
+    responses:
+      200:
+        description: Organizational diagnosis result
+        schema:
+          type: object
+          properties:
+            count:
+              type: integer
+            averages:
+              type: object
+              properties:
+                quantitative_burden:
+                  type: number
+                control:
+                  type: number
+                supervisor_support:
+                  type: number
+                coworker_support:
+                  type: number
+            health_risk:
+              type: object
+              properties:
+                work_burden_risk:
+                  type: number
+                support_risk:
+                  type: number
+                comprehensive_risk:
+                  type: number
+      400:
+        description: Invalid input
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No input data provided"}), 400
+            
+        answers_list = data.get('answers_list')
+        
+        if not answers_list or not isinstance(answers_list, list):
+             return jsonify({"error": "Missing or invalid 'answers_list'"}), 400
+
+        # Optional gender (defaults to male in service if not handled specially)
+        gender = data.get('gender', 'male')
+
+        result = diagnosis_service.calculate_organization_diagnosis(answers_list, gender)
+        
+        if "error" in result:
+             return jsonify(result), 400
+             
+        return jsonify(result)
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @stress_check_bp.route('/api/questions', methods=['GET'])
 def get_questions():
     """

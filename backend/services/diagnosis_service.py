@@ -1,4 +1,5 @@
 from utils.data_loader import DataLoader
+import math
 
 class DiagnosisService:
     def __init__(self):
@@ -179,3 +180,119 @@ class DiagnosisService:
             return option['score']
         except IndexError:
             return 0
+
+    def calculate_organization_diagnosis(self, answers_list, gender="male"):
+        """
+        Calculates organizational health risk based on a list of employee answers.
+        Uses coefficients derived from standard stress diagnosis graphs (Brief Job Stress Questionnaire).
+        """
+        
+        # Coefficients (Solved based on regression from standard graph points)
+        # Graph 1 (Job Demand-Control: Burden vs Control)
+        # Risk = 100 * exp((Burden - A)*alpha + (Control - B)*beta)
+        COEFF_A = 8.2500
+        COEFF_B = 7.4688
+        COEFF_ALPHA = 0.07668
+        COEFF_BETA = -0.08896
+
+        # Graph 2 (Social Support: Supervisor vs Coworker)
+        # Risk = 100 * exp((Sup - C)*gamma + (Cow - D)*delta)
+        COEFF_C = 7.3000
+        COEFF_D = 8.2668
+        COEFF_GAMMA = -0.09711
+        COEFF_DELTA = -0.09711 
+        
+        # Accumulators
+        total_quantitative_burden = 0
+        total_control = 0
+        total_supervisor_support = 0
+        total_coworker_support = 0
+        
+        valid_count = 0
+        
+        for answers in answers_list:
+            # 1. Reverse Scoring & Item Selection
+            # Items: A1-A3, A8-A10, C1, C2, C4, C5, C7, C8
+            # Reverse: 1->4, 2->3, 3->2, 4->1 => (5 - val)
+            
+            def get_rev(qid):
+                val = answers.get(qid)
+                if val is None or val < 1 or val > 4:
+                    return None # Invalid or missing
+                return 5 - val
+
+            try:
+                # Axis 1: Quantitative Burden (A1+A2+A3)
+                v_a1 = get_rev("A1")
+                v_a2 = get_rev("A2")
+                v_a3 = get_rev("A3")
+                
+                # Axis 2: Control (A8+A9+A10)
+                v_a8 = get_rev("A8")
+                v_a9 = get_rev("A9")
+                v_a10 = get_rev("A10")
+                
+                # Axis 3: Supervisor Support (C1+C4+C7)
+                v_c1 = get_rev("C1")
+                v_c4 = get_rev("C4")
+                v_c7 = get_rev("C7")
+                
+                # Axis 4: Coworker Support (C2+C5+C8)
+                v_c2 = get_rev("C2")
+                v_c5 = get_rev("C5")
+                v_c8 = get_rev("C8")
+                
+                # Check for None (missing data)
+                if None in [v_a1, v_a2, v_a3, v_a8, v_a9, v_a10, v_c1, v_c4, v_c7, v_c2, v_c5, v_c8]:
+                    continue
+
+                q_burden = v_a1 + v_a2 + v_a3
+                control = v_a8 + v_a9 + v_a10
+                sup_support = v_c1 + v_c4 + v_c7
+                cow_support = v_c2 + v_c5 + v_c8
+                
+                total_quantitative_burden += q_burden
+                total_control += control
+                total_supervisor_support += sup_support
+                total_coworker_support += cow_support
+                
+                valid_count += 1
+                
+            except TypeError:
+                continue
+
+        if valid_count == 0:
+            return {"error": "No valid data provided for organizational diagnosis"}
+            
+        # 2. Averages
+        avg_burden = total_quantitative_burden / valid_count
+        avg_control = total_control / valid_count
+        avg_sup_support = total_supervisor_support / valid_count
+        avg_cow_support = total_coworker_support / valid_count
+        
+        # 3. Health Risk Calculation
+        # Risk A = 100 * exp((Mean_Burden - A) * alpha + (Mean_Control - B) * beta)
+        term_a = (avg_burden - COEFF_A) * COEFF_ALPHA + (avg_control - COEFF_B) * COEFF_BETA
+        risk_a = 100 * math.exp(term_a)
+        
+        # Risk B = 100 * exp((Mean_Sup - C) * gamma + (Mean_Cow - D) * delta)
+        term_b = (avg_sup_support - COEFF_C) * COEFF_GAMMA + (avg_cow_support - COEFF_D) * COEFF_DELTA
+        risk_b = 100 * math.exp(term_b)
+        
+        # Total Risk
+        total_risk = (risk_a * risk_b) / 100
+        
+        return {
+            "count": valid_count,
+            "averages": {
+                "quantitative_burden": round(avg_burden, 2),
+                "control": round(avg_control, 2),
+                "supervisor_support": round(avg_sup_support, 2),
+                "coworker_support": round(avg_cow_support, 2)
+            },
+            "health_risk": {
+                "work_burden_risk": round(risk_a, 1),
+                "support_risk": round(risk_b, 1),
+                "comprehensive_risk": round(total_risk, 1)
+            }
+        }
