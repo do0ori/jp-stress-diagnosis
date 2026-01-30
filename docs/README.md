@@ -115,64 +115,13 @@ CSV 파일에 명시된 기준에 따라, **원점수 단순 합계**를 기준�
 
 ---
 
-## 4. API 설계 (API Specification)
+## 4. 종합 직무 스트레스 진단 (Organization Diagnosis) - 개인 리포트용
 
-### Request
-`POST /api/diagnosis`
-
-```json
-{
-  "gender": "male", // "male" or "female" (환산표 적용 시 필요)
-  "answers": {
-    "A1": 4,
-    "A2": 3,
-    ...
-    "D2": 1
-  }
-}
-```
-
-### Response
-```json
-{
-  "result": {
-    "high_stress": true,
-    "summary_scores": {
-      "sum_a": 78,
-      "sum_b": 80,
-      "sum_c": 15
-    }
-  },
-  "charts": [
-    {
-      "label": "스트레스 요인 (A)",
-      "axes": [
-        { "id": "F-A1", "label": "양적 부담", "score": 2 },
-        { "id": "F-A2", "label": "질적 부담", "score": 3 },
-        ...
-      ]
-    },
-    {
-      "label": "스트레스 반응 (B)",
-      "axes": [...]
-    },
-    {
-      "label": "지원 요인 (C & D)",
-      "axes": [...]
-    }
-  ]
-}
-```
-
----
-
-## 5. 종합 직무 스트레스 진단 (Organization Diagnosis) - 개인 리포트용
-
-### 5.1 개요
+### 4.1 개요
 조직 진단용 지표(건강 리스크 산출 공식)를 활용하여, 개인의 **직무 스트레스 요인(Job Stress)과** **사회적 지원(Social Support)** 상태를 4가지 핵심 축으로 분석합니다.
 기존의 2차원 산점도 방식에서 **1차원 막대 그래프(Bar Chart)** 방식으로 변경하여 직관성을 높였습니다.
 
-### 5.2 평가 지표 (4 Factors)
+### 4.2 핵심 평가 지표 (4 Factors)
 모든 지표는 **점수가 높을수록 긍정적(양호)인** 방향으로 통일했습니다.
 
 | 지표명 (UI) | 원본 데이터 (Factor) | 계산 방식 (점수 통일) | 범위 |
@@ -184,7 +133,7 @@ CSV 파일에 명시된 기준에 따라, **원점수 단순 합계**를 기준�
 
 > **Note**: '양적 직무 부담'은 원래 점수가 높을수록 스트레스가 심한(부정적) 요인이므로, $15 - Score$ 를 통해 '업무 여유도(긍정적)'로 역산하여 표현합니다.
 
-### 5.3 5단계 등급 체계 (Grading System)
+### 4.3 5단계 등급 체계 (Grading System)
 산출된 점수(3~12점)를 5단계 구간으로 나누어 평가합니다. (소수점 포함, 연속 구간)
 
 | 등급 (Level) | 점수 구간 (Score) | 상태 설명 |
@@ -195,10 +144,45 @@ CSV 파일에 명시된 기준에 따라, **원점수 단순 합계**를 기준�
 | **나쁨** | **5.0 이상 ~ 7.0 미만** | 개선이 필요한 상태입니다. |
 | **매우 나쁨** | **3.0 이상 ~ 5.0 미만** | 위험한 수준으로, 조치가 시급합니다. |
 
-### 5.4 건강 리스크 판정 (Health Risk)
-건강 리스크 점수는 **'직무 스트레스 판정 도표 (Job Stress Model)'의** 수리적 모델을 기반으로 산출됩니다. 
-즉, **4가지 요인의 좌표(Score)를** 판정 공식에 대입하여 계산된 결과가 바로 **건강 리스크(학술적 예측치)**입니다.
+### 4.4 건강 리스크 산출 공식
+건강 리스크 점수는 **'직무 스트레스 판정 도표 (Job Stress Model)'의** 수리적 모델을 기반으로 산출됩니다.
 
-- **계산 원리**: 각 축의 점수가 표준 평균(전국 평균 등 기준점)에서 얼마나 벗어나 있는지, 그리고 그것이 건강에 미치는 영향도(가중치)를 반영하여 지수 함수($Risk = 100 \times e^{\dots}$)로 계산합니다.
+#### A. 업무 부담-재량권 리스크 (Risk A)
+$$\text{Risk}_\text{A} = 100 \times \exp((\text{Burden}_\text{avg} - 8.2500) \times 0.07668 + (\text{Control}_\text{avg} - 7.4688) \times -0.08896)$$
+- $\text{Burden}_{\text{avg}}$: 양적 업무 부담 합계 ($A1+A2+A3$)
+- $\text{Control}_{\text{avg}}$: 직무 재량권 합계 ($A8+A9+A10$)
 
+#### B. 사회적 지원 리스크 (Risk B)
+$$\text{Risk}_\text{B} = 100 \times \exp((\text{Sup}_\text{avg} - 7.3000) \times -0.09711 + (\text{Cow}_\text{avg} - 8.2668) \times -0.09711)$$
+- $\text{Sup}_{\text{avg}}$: 상사의 지원 합계 ($C1+C4+C7$)
+- $\text{Cow}_{\text{avg}}$: 동료의 지원 합계 ($C2+C5+C8$)
 
+#### C. 종합 건강 리스크 (Total Risk)
+$$\text{Total}_\text{Risk} = \frac{\text{Risk}_\text{A} \times \text{Risk}_\text{B}}{100}$$
+
+---
+
+## 5. API 설계 (API Specification)
+
+### 5.1 질문 목록 조회
+`GET /api/questions`
+- **응답**: 전체 57문항 데이터 (`ID`, `텍스트`, `선택지`)
+
+### 5.2 개인용 스트레스 진단 (개인 요약 및 차트)
+`POST /api/diagnosis`
+- **Request**: 성별(`gender`) 및 응답 세트(`answers`)
+- **Response**: 고스트레스 판정 유무, 영역별 합계 및 레이더 차트용 데이터
+
+### 5.3 종합 건강 리스크 진단 (개인/조직 공용)
+`POST /api/diagnosis/organization`
+- **Request**: 
+  ```json
+  {
+    "gender": "male",
+    "answers_list": [
+      { "A1": 3, "A2": 2, ... },
+      { "A1": 1, "A2": 4, ... }
+    ]
+  }
+  ```
+- **Response**: 4대 핵심 지표 평균, 등급(Grade), 그리고 건강 리스크 지수($\text{Risk}\_\text{A}$, $\text{Risk}\_\text{B}$, $\text{Total}\_\text{Risk}$)
