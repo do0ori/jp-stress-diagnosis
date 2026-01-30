@@ -30,3 +30,18 @@ export const checkHealth = async () => {
     }
     return response.json();
 };
+
+export const postOrganizationDiagnosis = async (answersList, gender) => {
+    const response = await fetch(`${API_BASE_URL}/api/diagnosis/organization`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ answers_list: answersList, gender }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to submit organization diagnosis');
+    }
+    return response.json();
+};
