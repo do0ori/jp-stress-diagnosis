@@ -12,133 +12,49 @@ const Result = ({ result, gender, onRestart }) => {
 
     const [downloading, setDownloading] = useState(false);
 
-    // Split refs for multi-page PDF
-    const part1Ref = useRef(null);
-    const part2Ref = useRef(null);
+    // Single ref for the entire result content (Mirror Capture)
+    const resultContainerRef = useRef(null);
 
     const handleDownloadPDF = async () => {
-        if (!part1Ref.current) return;
+        if (!resultContainerRef.current) return;
         setDownloading(true);
         try {
-            const pdf = new jsPDF('l', 'mm', 'a4'); // Landscape
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const element = resultContainerRef.current;
 
-            // Helper to capture a section
-            const captureSection = async (element) => {
-                const canvas = await html2canvas(element, {
-                    scale: 2,
-                    useCORS: true,
-                    windowWidth: 1600, // Ensure wide capture for landscape
-                    onclone: (clonedDoc) => {
-                        // Hide buttons if any inside
-                        const buttons = clonedDoc.querySelectorAll('button');
-                        buttons.forEach(btn => btn.style.display = 'none');
+            // Capture the entire element at its current state
+            const canvas = await html2canvas(element, {
+                scale: 2, // High resolution
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                onclone: (clonedDoc) => {
+                    // Hide all buttons in the PDF
+                    const buttons = clonedDoc.querySelectorAll('button');
+                    buttons.forEach(btn => btn.style.display = 'none');
 
-                        // Force Container Width for Landscape PDF
-                        const contentDiv = clonedDoc.body.querySelector('[data-pdf-section]');
-                        if (contentDiv) {
-                            contentDiv.style.width = '1400px';
-                            contentDiv.style.maxWidth = 'none';
-                            contentDiv.style.padding = '20px';
-                            contentDiv.style.margin = '0 auto';
-                        }
-
-                        // 1. Radar Charts Optimization (Page 1)
-                        const radarContainer = clonedDoc.querySelector('.radar-charts-section > div');
-                        if (radarContainer) {
-                            radarContainer.style.flexDirection = 'row';
-                            radarContainer.style.flexWrap = 'nowrap';
-                            radarContainer.style.justifyContent = 'center';
-                            radarContainer.style.gap = '40px';
-                            radarContainer.style.alignItems = 'stretch';
-
-                            Array.from(radarContainer.children).forEach(child => {
-                                child.style.width = '30%';
-                                child.style.maxWidth = 'none';
-                                child.style.flex = '0 0 auto';
-                                child.style.margin = '0';
-                                child.style.padding = '1rem';
-
-                                child.style.display = 'flex';
-                                child.style.flexDirection = 'column';
-                                child.style.alignItems = 'center';
-                            });
-                        }
-
-                        // 2. Organization Charts Optimization (Page 2)
-                        const chartRows = clonedDoc.querySelectorAll('.chart-row-section');
-                        chartRows.forEach(row => {
-                            row.style.flexDirection = 'row';
-                            row.style.flexWrap = 'nowrap';
-                            row.style.justifyContent = 'space-between';
-                            row.style.gap = '3rem';
-                            row.style.alignItems = 'flex-start';
-
-                            Array.from(row.children).forEach(child => {
-                                child.style.width = '48%';
-                                child.style.maxWidth = 'none';
-                            });
-                        });
-
-                        // 2.1 Expand Inner Bar Charts
-                        const barWrappers = clonedDoc.querySelectorAll('.bar-chart-wrapper');
-                        barWrappers.forEach(wrapper => {
-                            wrapper.style.width = '100%';
-                            // Target the inner flex container that holds the bars
-                            const innerFlex = wrapper.querySelector('.bar-flex-container');
-                            if (innerFlex) {
-                                innerFlex.style.justifyContent = 'space-around'; // Spread bars apart
-                                innerFlex.style.gap = '0';
-                                innerFlex.style.width = '100%';
-                            }
-                        });
-
-                        // 2.2 Expand Inner Scatter Charts
-                        const scatterWrappers = clonedDoc.querySelectorAll('.scatter-chart-wrapper');
-                        scatterWrappers.forEach(wrapper => {
-                            wrapper.style.maxWidth = 'none';
-                            wrapper.style.width = '100%';
-                            wrapper.style.height = 'auto'; // Release fixed 400px
-                            wrapper.style.aspectRatio = '1 / 1'; // Keep square
-
-                            // Adjust the inner content scaling if needed
-                            // The inner div with labels is relative. 
-                            // We might need to ensure the graph bg fills the new size.
-                            const innerGraph = wrapper.querySelector('.scatter-inner-box');
-                            if (innerGraph) {
-                                innerGraph.style.width = '80%'; // Relative to the new huge wrapper
-                                innerGraph.style.height = '80%';
-                                innerGraph.style.margin = '10% auto'; // Center it
-                            }
-                        });
+                    // Ensure the background is solid white for the capture
+                    const clonedTarget = clonedDoc.body.querySelector('.result-wrapper');
+                    if (clonedTarget) {
+                        clonedTarget.style.background = 'white';
+                        clonedTarget.style.boxShadow = 'none';
+                        clonedTarget.style.borderRadius = '0';
                     }
-                });
-                return canvas;
-            };
+                }
+            });
 
-            // 1. Capture Part 1 (Summary + Radar)
-            const canvas1 = await captureSection(part1Ref.current);
-            const imgData1 = canvas1.toDataURL('image/png');
-            const imgWidth1 = canvas1.width;
-            const imgHeight1 = canvas1.height;
-            const ratio1 = Math.min(pdfWidth / imgWidth1, pdfHeight / imgHeight1);
-            const imgX1 = (pdfWidth - imgWidth1 * ratio1) / 2;
+            const imgData = canvas.toDataURL('image/png');
 
-            pdf.addImage(imgData1, 'PNG', imgX1, 10, imgWidth1 * ratio1, imgHeight1 * ratio1);
+            // DYNAMIC PDF SIZING: Create a single page that exactly fits the content
+            // We use pixels ('px') as the unit to match the canvas dimensions 1:1
+            const imgWidthPtr = canvas.width;
+            const imgHeightPtr = canvas.height;
 
-            // 2. Capture Part 2 (Organization) if exists
-            if (organization && part2Ref.current) {
-                pdf.addPage(); // New Landscape Page
-                const canvas2 = await captureSection(part2Ref.current);
-                const imgData2 = canvas2.toDataURL('image/png');
-                const imgWidth2 = canvas2.width;
-                const imgHeight2 = canvas2.height;
-                const ratio2 = Math.min(pdfWidth / imgWidth2, pdfHeight / imgHeight2);
-                const imgX2 = (pdfWidth - imgWidth2 * ratio2) / 2;
+            const pdf = new jsPDF({
+                orientation: imgWidthPtr > imgHeightPtr ? 'l' : 'p',
+                unit: 'px',
+                format: [imgWidthPtr, imgHeightPtr]
+            });
 
-                pdf.addImage(imgData2, 'PNG', imgX2, 10, imgWidth2 * ratio2, imgHeight2 * ratio2);
-            }
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidthPtr, imgHeightPtr);
 
             const today = new Date();
             const dateString = today.toISOString().split('T')[0];
@@ -234,10 +150,10 @@ const Result = ({ result, gender, onRestart }) => {
     );
 
     return (
-        <div className="result-wrapper" style={{ maxWidth: '800px', margin: '0 auto', backgroundColor: '#fff', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
+        <div ref={resultContainerRef} className="result-wrapper" style={{ maxWidth: '800px', margin: '0 auto', backgroundColor: '#fff', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
 
             {/* PART 1: Summary & Radar Charts */}
-            <div ref={part1Ref} data-pdf-section className="result-container-part1" style={{ padding: '2rem' }}>
+            <div data-pdf-section className="result-container-part1" style={{ padding: '2rem' }}>
                 <h1 style={{ textAlign: 'center', fontSize: '2rem', marginBottom: '2rem', color: '#333' }}>진단 결과</h1>
 
                 {/* Diagnosis Result Alert */}
@@ -306,7 +222,7 @@ const Result = ({ result, gender, onRestart }) => {
 
             {/* PART 2: Organization Diagnosis */}
             {organization && (
-                <div ref={part2Ref} data-pdf-section className="organization-section" style={{ marginTop: '0', borderTop: '2px solid #eee', paddingTop: '3rem', padding: '2rem' }}>
+                <div data-pdf-section className="organization-section" style={{ marginTop: '0', borderTop: '2px solid #eee', paddingTop: '3rem', padding: '2rem' }}>
                     <h2 style={{ textAlign: 'center', marginBottom: '4rem', fontSize: '1.8rem', color: '#333', fontWeight: 'bold' }}>종합 직무 스트레스 진단 (개인 건강 리스크)</h2>
 
                     {/* Section 1: Job Burden */}
