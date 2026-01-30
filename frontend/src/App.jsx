@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Landing from './components/Landing'
 import Questionnaire from './components/Questionnaire'
 import Result from './components/Result'
-import { postDiagnosis } from './api'
+import { postDiagnosis, postOrganizationDiagnosis } from './api'
 import { Toaster } from 'react-hot-toast'
 
 function App() {
@@ -17,8 +17,19 @@ function App() {
 
   const handleQuestionnaireComplete = async (answers) => {
     try {
-      const result = await postDiagnosis(answers, gender);
-      setDiagnosisResult(result);
+      // Run both diagnosis requests in parallel
+      const [individualResult, organizationResult] = await Promise.all([
+        postDiagnosis(answers, gender),
+        postOrganizationDiagnosis([answers], gender) // Wrap single answer in list
+      ]);
+
+      // Merge results
+      const finalResult = {
+        ...individualResult,
+        organization: organizationResult
+      };
+
+      setDiagnosisResult(finalResult);
       setStep('result');
     } catch (error) {
       console.error(error);

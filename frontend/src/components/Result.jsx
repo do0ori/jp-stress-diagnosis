@@ -3,67 +3,62 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
 import toast from 'react-hot-toast';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import stressBg from '../assets/stress_graph_bg.png';
+import supportBg from '../assets/support_graph_bg.png';
 
 const Result = ({ result, gender, onRestart }) => {
     const { high_stress, summary_scores } = result.result;
-    const { charts } = result;
+    const { charts, organization } = result;
 
     const [downloading, setDownloading] = useState(false);
-    const resultRef = useRef(null);
+
+    // Single ref for the entire result content (Mirror Capture)
+    const resultContainerRef = useRef(null);
 
     const handleDownloadPDF = async () => {
-        if (!resultRef.current) return;
+        if (!resultContainerRef.current) return;
         setDownloading(true);
         try {
-            const canvas = await html2canvas(resultRef.current, {
-                scale: 3,
+            const element = resultContainerRef.current;
+
+            // Capture the entire element at its current state
+            const canvas = await html2canvas(element, {
+                scale: 2, // High resolution
                 useCORS: true,
+                backgroundColor: '#ffffff',
                 onclone: (clonedDoc) => {
-                    // 1. Hide buttons
+                    // Hide all buttons in the PDF
                     const buttons = clonedDoc.querySelectorAll('button');
                     buttons.forEach(btn => btn.style.display = 'none');
 
-                    // 2. Hide email input section
-                    const emailSection = clonedDoc.querySelector('.email-section');
-                    if (emailSection) emailSection.style.display = 'none';
-
-                    // 3. Force Container Width for Horizontal Layout
-                    const container = clonedDoc.querySelector('.result-container');
-                    if (container) {
-                        container.style.maxWidth = 'none';
-                        container.style.width = '1300px';
-                        container.style.padding = '2rem';
-                    }
-
-                    // 4. Handle Scrollable Chart Area
-                    const chartArea = clonedDoc.querySelector('.chart-scroll-area');
-                    if (chartArea) {
-                        chartArea.style.overflow = 'visible';
-                        chartArea.style.flexWrap = 'nowrap';
-                        chartArea.style.justifyContent = 'center';
-                        chartArea.style.gap = '4rem';
+                    // Ensure the background is solid white for the capture
+                    const clonedTarget = clonedDoc.body.querySelector('.result-wrapper');
+                    if (clonedTarget) {
+                        clonedTarget.style.background = 'white';
+                        clonedTarget.style.boxShadow = 'none';
+                        clonedTarget.style.borderRadius = '0';
                     }
                 }
             });
+
             const imgData = canvas.toDataURL('image/png');
 
-            const pdf = new jsPDF('l', 'mm', 'a4'); // Landscape
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
+            // DYNAMIC PDF SIZING: Create a single page that exactly fits the content
+            // We use pixels ('px') as the unit to match the canvas dimensions 1:1
+            const imgWidthPtr = canvas.width;
+            const imgHeightPtr = canvas.height;
 
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
+            const pdf = new jsPDF({
+                orientation: imgWidthPtr > imgHeightPtr ? 'l' : 'p',
+                unit: 'px',
+                format: [imgWidthPtr, imgHeightPtr]
+            });
 
-            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-
-            const imgX = (pdfWidth - imgWidth * ratio) / 2;
-            const imgY = 0; // Top align primarily, or center: (pdfHeight - imgHeight * ratio) / 2;
-
-            pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidthPtr, imgHeightPtr);
 
             const today = new Date();
-            const dateString = today.toISOString().split('T')[0]; // YYYY-MM-DD
-            const timeString = today.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
+            const dateString = today.toISOString().split('T')[0];
+            const timeString = today.toTimeString().split(' ')[0].replace(/:/g, '-');
 
             pdf.save(`stress-diagnosis-result-${dateString}_${timeString}.pdf`);
             toast.success('PDF 다운로드가 시작되었습니다.');
@@ -78,57 +73,299 @@ const Result = ({ result, gender, onRestart }) => {
 
     const themeColor = gender === 'female' ? '#e83e8c' : '#007bff';
 
+    const getGradeColor = (score) => {
+        if (score >= 11) return '#2b8a3e'; // Very Good
+        if (score >= 9) return '#66a80f';  // Good
+        if (score >= 7) return '#e67700';  // Normal
+        if (score >= 5) return '#d9480f';  // Bad
+        return '#e03131'; // Very Bad
+    };
+
+    const getGradeText = (score) => {
+        if (score >= 11) return '매우 좋음';
+        if (score >= 9) return '좋음';
+        if (score >= 7) return '보통';
+        if (score >= 5) return '나쁨';
+        return '매우 나쁨';
+    };
+
+    // Helper for risk score color
+    const getRiskColor = (score) => {
+        if (score <= 100) return '#333'; // Black (Normal)
+        if (score <= 130) return '#e67700'; // Orange (Warning)
+        return '#e03131'; // Red (Danger)
+    };
+
+    const VerticalBar = ({ label, score }) => {
+        const heightPercent = Math.max(0, ((score - 3) / 9) * 100);
+        const color = getGradeColor(score);
+        const gradeText = getGradeText(score);
+
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '80px', position: 'relative', height: '100%', justifyContent: 'flex-end', zIndex: 10 }}>
+                {/* Bar */}
+                <div style={{
+                    width: '30px',
+                    height: `${heightPercent}%`,
+                    minHeight: '4px', // Ensure bar is visible even at 0%
+                    backgroundColor: color,
+                    borderRadius: '15px 15px 0 0',
+                    transition: 'height 1s ease-in-out',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                }}></div>
+
+                {/* Labels positioned BELOW the graph area */}
+                <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: '10px', textAlign: 'center', width: '120px' }}>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#333', marginBottom: '4px', whiteSpace: 'nowrap' }}>
+                        {label}
+                    </div>
+                    <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: color }}>
+                        {gradeText}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#999', marginTop: '2px' }}>
+                        {score.toFixed(1)}점
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    // Background Grid Component
+    const ZebraBackground = () => (
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, display: 'flex', flexDirection: 'column', borderRadius: '8px', overflow: 'hidden' }}>
+            {[
+                { label: '매우 좋음', color: '#ebfbee', textColor: '#2b8a3e' }, // 11-12
+                { label: '좋음', color: '#f4fce3', textColor: '#66a80f' },    // 9-10
+                { label: '보통', color: '#fff9db', textColor: '#e67700' },    // 7-8
+                { label: '나쁨', color: '#fff4e6', textColor: '#d9480f' },    // 5-6
+                { label: '매우 나쁨', color: '#fff5f5', textColor: '#e03131' }, // 3-4
+            ].map((level, i) => (
+                <div key={i} style={{ flex: 1, backgroundColor: level.color, display: 'flex', alignItems: 'center', paddingLeft: '10px' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: level.textColor }}>
+                        {level.label}
+                    </span>
+                </div>
+            ))}
+        </div>
+    );
+
     return (
-        <div ref={resultRef} className="result-container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem', backgroundColor: '#fff' }}>
-            <h1 style={{ textAlign: 'center' }}>진단 결과</h1>
+        <div ref={resultContainerRef} className="result-wrapper" style={{ maxWidth: '800px', margin: '0 auto', backgroundColor: '#fff', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
 
-            {high_stress ? (
-                <div style={{ padding: '1rem', backgroundColor: '#f8d7da', color: '#721c24', borderRadius: '8px', marginBottom: '2rem', textAlign: 'center' }}>
-                    <h2>⚠ 고스트레스 주의 ⚠</h2>
-                    <p>직무 스트레스 수준이 높게 나타났습니다. 전문가와의 상담을 권장합니다.</p>
-                </div>
-            ) : (
-                <div style={{ padding: '1rem', backgroundColor: '#d4edda', color: '#155724', borderRadius: '8px', marginBottom: '2rem', textAlign: 'center' }}>
-                    <h2>정상 스트레스 수준</h2>
-                    <p>직무 스트레스 수준이 안정적인 범위 내에 있습니다.</p>
-                </div>
-            )}
+            {/* PART 1: Summary & Radar Charts */}
+            <div data-pdf-section className="result-container-part1" style={{ padding: '2rem' }}>
+                <h1 style={{ textAlign: 'center', fontSize: '2rem', marginBottom: '2rem', color: '#333' }}>진단 결과</h1>
 
-            <div style={{ textAlign: 'center', marginBottom: '1rem', color: '#666', fontSize: '0.9rem' }}>
-                <p>※ 차트의 중심에 가까울수록 스트레스 요인이 많거나 스트레스 반응이 높은 상태입니다.</p>
-                <p>(그래프가 바깥쪽으로 넓을수록 건강하고 긍정적인 상태를 의미)</p>
+                {/* Diagnosis Result Alert */}
+                {high_stress ? (
+                    <div style={{ padding: '1.5rem', backgroundColor: '#f8d7da', color: '#721c24', borderRadius: '8px', marginBottom: '2rem', textAlign: 'center' }}>
+                        <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>⚠ 고스트레스 주의 ⚠</h2>
+                        <p style={{ fontSize: '1.1rem' }}>직무 스트레스 수준이 높게 나타났습니다. 전문가와의 상담을 권장합니다.</p>
+                    </div>
+                ) : (
+                    <div style={{ padding: '1.5rem', backgroundColor: '#d4edda', color: '#155724', borderRadius: '8px', marginBottom: '2rem', textAlign: 'center' }}>
+                        <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>정상 스트레스 수준</h2>
+                        <p style={{ fontSize: '1.1rem' }}>직무 스트레스 수준이 안정적인 범위 내에 있습니다.</p>
+                    </div>
+                )}
+
+                {/* Summary Scores (Simple Value Only) */}
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem', marginBottom: '3rem', padding: '1.5rem', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '0.9rem', color: '#666', marginBottom: '5px' }}>스트레스 요인 (A)</div>
+                        <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#333' }}>{summary_scores.sum_a}</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '0.9rem', color: '#666', marginBottom: '5px' }}>스트레스 반응 (B)</div>
+                        <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#333' }}>{summary_scores.sum_b}</div>
+                    </div>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '0.9rem', color: '#666', marginBottom: '5px' }}>사회적 지지 (C)</div>
+                        <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#333' }}>{summary_scores.sum_c}</div>
+                    </div>
+                </div>
+
+                <div style={{ textAlign: 'center', marginBottom: '2rem', color: '#666', fontSize: '1rem' }}>
+                    <p>※ 차트의 중심에 가까울수록 스트레스 요인이 많거나 스트레스 반응이 높은 상태입니다.</p>
+                    <p>(그래프가 바깥쪽으로 넓을수록 건강하고 긍정적인 상태를 의미)</p>
+                </div>
+
+                {/* Radar Charts Grid (Vertical Stack) */}
+                <div className="radar-charts-section" style={{ marginBottom: '4rem' }}>
+                    <h3 style={{ textAlign: 'center', marginBottom: '2rem', fontSize: '1.5rem', color: '#333' }}>상세 직무 스트레스 요인</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3rem' }}>
+                        {charts.map((chart, idx) => (
+                            <div key={idx} style={{ width: '100%', maxWidth: '600px', border: '1px solid #ddd', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                                <h3 style={{ textAlign: 'center', fontSize: '1.2rem', marginBottom: '1rem', color: '#555' }}>{chart.label}</h3>
+                                <div style={{ width: '100%', height: '350px' }}>
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chart.axes}>
+                                            <PolarGrid />
+                                            <PolarAngleAxis dataKey="label" fontSize={12} />
+                                            <PolarRadiusAxis angle={30} domain={[0, 5]} />
+                                            <Radar
+                                                name={chart.label}
+                                                dataKey="score"
+                                                stroke="#8884d8"
+                                                fill="#8884d8"
+                                                fillOpacity={0.6}
+                                            />
+                                            <Tooltip />
+                                        </RadarChart>
+                                    </ResponsiveContainer>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
 
-            <div className="chart-scroll-area" style={{ display: 'flex', flexWrap: 'nowrap', justifyContent: 'space-between', gap: '1rem', overflowX: 'auto' }}>
-                {charts.map((chart, idx) => (
-                    <div key={idx} style={{ flex: '1', minWidth: '350px', border: '1px solid #ddd', padding: '1rem', borderRadius: '8px' }}>
-                        <h3 style={{ textAlign: 'center' }}>{chart.label}</h3>
-                        <div style={{ width: '100%', height: '300px' }}>
-                            <ResponsiveContainer width="100%" height="100%">
-                                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chart.axes}>
-                                    <PolarGrid />
-                                    <PolarAngleAxis dataKey="label" fontSize={11} />
-                                    <PolarRadiusAxis angle={30} domain={[0, 5]} />
-                                    <Radar
-                                        name={chart.label}
-                                        dataKey="score"
-                                        stroke="#8884d8"
-                                        fill="#8884d8"
-                                        fillOpacity={0.6}
-                                    />
-                                    <Tooltip />
-                                </RadarChart>
-                            </ResponsiveContainer>
+            {/* PART 2: Organization Diagnosis */}
+            {organization && (
+                <div data-pdf-section className="organization-section" style={{ marginTop: '0', borderTop: '2px solid #eee', paddingTop: '3rem', padding: '2rem' }}>
+                    <h2 style={{ textAlign: 'center', marginBottom: '4rem', fontSize: '1.8rem', color: '#333', fontWeight: 'bold' }}>종합 직무 스트레스 진단 (개인 건강 리스크)</h2>
+
+                    {/* Section 1: Job Burden */}
+                    <div style={{ marginBottom: '5rem', padding: '2rem', border: '1px solid #eee', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
+                        <h3 style={{ textAlign: 'center', fontSize: '1.5rem', marginBottom: '3rem', color: '#007bff' }}>1. 업무 부담 요인 & 건강 리스크 판정</h3>
+                        <div className="chart-row-section" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4rem' }}>
+
+                            {/* 1-1. Bar Chart */}
+                            <div style={{ width: '100%', maxWidth: '500px' }}>
+                                <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                                    <h4 style={{ fontSize: '1.3rem', color: '#333', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                        업무 부담 요인 <span style={{ fontSize: '0.9rem', fontWeight: 'normal', color: '#777' }}>(점수)</span>
+                                    </h4>
+                                </div>
+                                {/* Bar Chart Container */}
+                                <div className="bar-chart-wrapper" style={{ position: 'relative', height: '400px', padding: '0 10px', borderRadius: '15px', border: '1px solid #f1f3f5', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+                                    {/* Graph Area (Fixed Height) */}
+                                    <div style={{ position: 'relative', height: '300px', width: '100%' }}>
+                                        <ZebraBackground />
+                                        <div className="bar-flex-container" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 2, display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '40px', paddingBottom: '0' }}>
+                                            <VerticalBar label="업무 여유도" score={15 - organization.averages.quantitative_burden} />
+                                            <VerticalBar label="직무 재량권" score={organization.averages.control} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 1-2. Stress Map */}
+                            <div style={{ width: '100%', maxWidth: '500px' }}>
+                                <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                                    <h4 style={{ fontSize: '1.3rem', color: '#333', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                        건강 리스크 판정
+                                    </h4>
+                                    <div style={{ fontSize: '1.1rem', color: '#555' }}>
+                                        건강 리스크: <span style={{ fontWeight: 'bold', color: getRiskColor(organization.health_risk.work_burden_risk) }}>{organization.health_risk.work_burden_risk.toFixed(1)}</span>
+                                        <span style={{ fontSize: '0.9rem', color: '#888' }}> (기준 100)</span>
+                                    </div>
+                                </div>
+                                <div className="scatter-chart-wrapper" style={{ position: 'relative', width: '100%', maxWidth: '400px', height: '400px', margin: '0 auto', border: '1px solid #ddd', borderRadius: '15px', padding: '10px', backgroundColor: '#fafafa', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+                                    <div className="scatter-inner-box" style={{ position: 'relative', width: '280px', height: '280px', margin: '60px auto 10px auto' }}>
+                                        {/* Y Labels */}
+                                        <div style={{ position: 'absolute', top: '50%', left: '-50px', transform: 'translateY(-50%) rotate(-90deg)', fontSize: '0.8rem', fontWeight: 'bold', color: '#555' }}>직무 재량권</div>
+                                        <div style={{ position: 'absolute', top: '0', left: '-25px', fontSize: '0.7rem' }}>High</div>
+                                        <div style={{ position: 'absolute', bottom: '0', left: '-25px', fontSize: '0.7rem' }}>Low</div>
+
+                                        {/* Graph */}
+                                        <div style={{ width: '100%', height: '100%', backgroundImage: `url(${stressBg})`, backgroundSize: '100% 100%' }}>
+                                            <div style={{
+                                                position: 'absolute',
+                                                width: '12px', height: '12px', backgroundColor: '#007bff', borderRadius: '50%', border: '2px solid white',
+                                                left: `${((organization.averages.quantitative_burden - 3) / 9) * 100}%`,
+                                                top: `${((12 - organization.averages.control) / 9) * 100}%`,
+                                                transform: 'translate(-50%, -50%)',
+                                                boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                                            }} />
+                                        </div>
+
+                                        {/* X Labels */}
+                                        <div style={{ position: 'absolute', bottom: '-35px', left: '50%', transform: 'translateX(-50%)', fontSize: '0.8rem', fontWeight: 'bold', color: '#555' }}>양적 직무 부담</div>
+                                        <div style={{ position: 'absolute', bottom: '-20px', left: '0', fontSize: '0.7rem' }}>Low</div>
+                                        <div style={{ position: 'absolute', bottom: '-20px', right: '0', fontSize: '0.7rem' }}>High</div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-                ))}
-            </div>
 
-            <div className="email-section" style={{ marginTop: '2rem', textAlign: 'center', padding: '1rem', borderTop: '1px solid #eee' }}>          <h3>영역별 점수</h3>
-                <p>A (스트레스 요인): {summary_scores.sum_a}</p>
-                <p>B (스트레스 반응): {summary_scores.sum_b}</p>
-                <p>C (사회적 지원): {summary_scores.sum_c}</p>
-            </div>
+                    {/* Section 2: Social Support */}
+                    <div style={{ marginBottom: '5rem', padding: '2rem', border: '1px solid #eee', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
+                        <h3 style={{ textAlign: 'center', fontSize: '1.5rem', marginBottom: '3rem', color: '#28a745' }}>2. 사회적 지원 요인 & 건강 리스크 판정</h3>
+                        <div className="chart-row-section" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4rem' }}>
+
+                            {/* 2-1. Bar Chart */}
+                            <div style={{ width: '100%', maxWidth: '500px' }}>
+                                <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                                    <h4 style={{ fontSize: '1.3rem', color: '#333', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                        사회적 지원 요인 <span style={{ fontSize: '0.9rem', fontWeight: 'normal', color: '#777' }}>(점수)</span>
+                                    </h4>
+                                </div>
+                                {/* Bar Chart Container */}
+                                <div style={{ position: 'relative', height: '400px', padding: '0 10px', borderRadius: '15px', border: '1px solid #f1f3f5', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+                                    {/* Graph Area (Fixed Height) */}
+                                    <div style={{ position: 'relative', height: '300px', width: '100%' }}>
+                                        <ZebraBackground />
+                                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 2, display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: '40px', paddingBottom: '0' }}>
+                                            <VerticalBar label="상사의 지원" score={organization.averages.supervisor_support} />
+                                            <VerticalBar label="동료의 지원" score={organization.averages.coworker_support} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 2-2. Support Map */}
+                            <div style={{ width: '100%', maxWidth: '500px' }}>
+                                <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                                    <h4 style={{ fontSize: '1.3rem', color: '#333', fontWeight: 'bold', marginBottom: '0.5rem' }}>
+                                        건강 리스크 판정
+                                    </h4>
+                                    <div style={{ fontSize: '1.1rem', color: '#555' }}>
+                                        건강 리스크: <span style={{ fontWeight: 'bold', color: getRiskColor(organization.health_risk.support_risk) }}>{organization.health_risk.support_risk.toFixed(1)}</span>
+                                        <span style={{ fontSize: '0.9rem', color: '#888' }}> (기준 100)</span>
+                                    </div>
+                                </div>
+                                <div style={{ position: 'relative', width: '100%', maxWidth: '400px', height: '400px', margin: '0 auto', border: '1px solid #ddd', borderRadius: '15px', padding: '10px', backgroundColor: '#fafafa', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' }}>
+                                    <div style={{ position: 'relative', width: '280px', height: '280px', margin: '60px auto 10px auto' }}>
+                                        {/* Y Labels */}
+                                        <div style={{ position: 'absolute', top: '50%', left: '-50px', transform: 'translateY(-50%) rotate(-90deg)', fontSize: '0.8rem', fontWeight: 'bold', color: '#555' }}>동료의 지원</div>
+                                        <div style={{ position: 'absolute', top: '0', left: '-25px', fontSize: '0.7rem' }}>High</div>
+                                        <div style={{ position: 'absolute', bottom: '0', left: '-25px', fontSize: '0.7rem' }}>Low</div>
+
+                                        {/* Graph */}
+                                        <div style={{ width: '100%', height: '100%', backgroundImage: `url(${supportBg})`, backgroundSize: '100% 100%' }}>
+                                            <div style={{
+                                                position: 'absolute',
+                                                width: '12px', height: '12px', backgroundColor: '#28a745', borderRadius: '50%', border: '2px solid white',
+                                                left: `${((organization.averages.supervisor_support - 3) / 9) * 100}%`,
+                                                top: `${((12 - organization.averages.coworker_support) / 9) * 100}%`,
+                                                transform: 'translate(-50%, -50%)',
+                                                boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                                            }} />
+                                        </div>
+
+                                        {/* X Labels */}
+                                        <div style={{ position: 'absolute', bottom: '-35px', left: '50%', transform: 'translateX(-50%)', fontSize: '0.8rem', fontWeight: 'bold', color: '#555' }}>상사의 지원</div>
+                                        <div style={{ position: 'absolute', bottom: '-20px', left: '0', fontSize: '0.7rem' }}>Low</div>
+                                        <div style={{ position: 'absolute', bottom: '-20px', right: '0', fontSize: '0.7rem' }}>High</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div style={{ textAlign: 'left', marginBottom: '4rem', color: '#666', fontSize: '0.9rem', lineHeight: '1.6', backgroundColor: '#f9f9f9', padding: '1.5rem', borderRadius: '8px' }}>
+                        <p style={{ marginBottom: '0.5rem' }}><strong>※ 점수 해석 가이드</strong></p>
+                        <p>• <strong>요인 점수 (Bar Chart)</strong>: 12점 만점이며, 높을수록 긍정적인 상태(스트레스 적음/자원 풍부)를 의미합니다.</p>
+                        <p>• <strong>건강 리스크 (Health Risk)</strong>: 평균(100)을 기준으로, 신체/정신 건강 문제 발생 가능성을 예측한 지수입니다.</p>
+                        <p style={{ paddingLeft: '10px', color: '#888' }}>- 예: 리스크 지수가 <strong>100</strong>이면 평균 수준, <strong>120</strong>이면 건강 문제 발생 위험이 평균보다 <strong>20%</strong> 높을 것으로 예상됨을 의미합니다.</p>
+                    </div>
+                </div>
+            )}
 
             <div style={{ marginTop: '3rem', textAlign: 'center' }}>
                 <div style={{ marginBottom: '1.5rem' }}>
